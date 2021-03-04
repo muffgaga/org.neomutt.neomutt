@@ -1,0 +1,91 @@
+---
+app-id: org.neomutt.neomutt
+
+runtime: org.freedesktop.Sdk
+runtime-version: '20.08'
+sdk: org.freedesktop.Sdk
+
+command: neomutt
+
+finish-args:
+  # edit anything
+  - --filesystem=host
+  # imap?
+  - --share=network
+  # clipboard access
+  - --socket=wayland
+  - --socket=fallback-x11
+  - --share=ipc
+
+modules:
+  - name: libidn
+    buildsystem: autotools
+    sources:
+      - type: archive
+        url: https://ftp.gnu.org/gnu/libidn/libidn2-2.3.0.tar.gz
+        sha256: e1cb1db3d2e249a6a3eb6f0946777c2e892d5c5dc7bd91c74394fc3a01cab8b5
+
+  - name: lua
+    buildsystem: simple
+    build-commands:
+      - make all CFLAGS=-fPIC TO_LIB="liblua.a liblua.so"
+      - make install INSTALL_TOP=/app TO_LIB="liblua.a liblua.so"
+    sources:
+      - type: archive
+        url: http://www.lua.org/ftp/lua-5.4.2.tar.gz
+        sha256: 11570d97e9d7303c0a59567ed1ac7c648340cd0db10d5fd594c09223ef2f524f
+      - type: patch
+        path: lua-5.4.2-shared_library-1.patch
+
+  - name: gmime
+    buildsystem: autotools
+    sources:
+      - type: archive
+        url: https://download.gnome.org/sources/gmime/3.2/gmime-3.2.7.tar.xz
+        sha256: 2aea96647a468ba2160a64e17c6dc6afe674ed9ac86070624a3f584c10737d44
+
+  - name: xapian
+    buildsystem: autotools
+    sources:
+      - type: archive
+        url: https://oligarchy.co.uk/xapian/1.4.18/xapian-core-1.4.18.tar.xz
+        sha256: 196ddbb4ad10450100f0991a599e4ed944cbad92e4a6fe813be6dce160244b77
+
+  - name: talloc
+    buildsystem: simple
+    build-commands:
+      - ./configure --prefix=/app
+      - make
+      - make install
+    sources:
+      - type: archive
+        url: https://www.samba.org/ftp/talloc/talloc-2.3.2.tar.gz
+        sha256: 27a03ef99e384d779124df755deb229cd1761f945eca6d200e8cfd9bf5297bd7
+
+  - name: notmuch
+    buildsystem: autotools
+    sources:
+      - type: archive
+        url: https://notmuchmail.org/releases/notmuch-0.31.4.tar.xz
+        sha256: 8661b66567660fd630af10c4647c30327fdd1b34a988cab80d614328a5b74f55
+
+
+  - name: kyotocabinet
+    buildsystem: autotools
+    sources:
+      - type: archive
+        url: https://dbmx.net/kyotocabinet/pkg/kyotocabinet-1.2.79.tar.gz
+        sha256: 67fb1da4ae2a86f15bb9305f26caa1a7c0c27d525464c71fd732660a95ae3e1d
+
+  - name: neomutt
+    buildsystem: simple
+    build-options:
+      ldflags: -L/app/lib
+    build-commands:
+      - ./configure --disable-idn --idn2 --lua --notmuch --prefix=/app --gnutls --ssl --smime --gpgme --pgp --nls --kyotocabinet
+      - make
+      - make install
+    sources:
+      - type: archive
+        url: https://github.com/neomutt/neomutt/archive/20210205.tar.gz
+        sha256: 77e177780fc2d8abb475d9cac4342c7e61d53c243f6ce2f9bc86d819fc962cdb
