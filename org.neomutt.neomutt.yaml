@@ -77,6 +77,13 @@ modules:
         url: https://dbmx.net/kyotocabinet/pkg/kyotocabinet-1.2.79.tar.gz
         sha256: 67fb1da4ae2a86f15bb9305f26caa1a7c0c27d525464c71fd732660a95ae3e1d
 
+  - name: gpgme
+    buildsystem: autotools
+    sources:
+      - type: archive
+        url: https://www.gnupg.org/ftp/gcrypt/gpgme/gpgme-1.15.1.tar.bz2
+        sha256: eebc3c1b27f1c8979896ff361ba9bb4778b508b2496c2fc10e3775a40b1de1ad
+
   - name: neomutt
     buildsystem: simple
     build-options:
