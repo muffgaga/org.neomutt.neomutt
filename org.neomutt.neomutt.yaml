@@ -89,7 +89,7 @@ modules:
     build-options:
       ldflags: -L/app/lib
     build-commands:
-      - ./configure --disable-idn --idn2 --lua --notmuch --prefix=/app --gnutls --ssl --smime --gpgme --pgp --nls --kyotocabinet
+      - ./configure --disable-idn --idn2 --lua --notmuch --prefix=/app --gnutls --ssl --smime --gpgme --pgp --nls --kyotocabinet --mixmaster --sasl
       - make
       - make install
     sources:
